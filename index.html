@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>San Antonio Storage Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .storage-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+        .storage-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .discount-badge {
+            animation: pulse 2s infinite;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.05); }
+        }
+        .search-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .filter-btn {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .filter-btn:hover {
+            transform: translateY(-2px);
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-gradient {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        }
+        .feature-tag {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            transition: all 0.3s ease;
+        }
+        .feature-tag:hover {
+            transform: scale(1.05);
+        }
+        .rating-stars {
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        }
+        .action-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        .action-btn:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-full">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12 hero-gradient rounded-3xl p-8 shadow-2xl">
+            <h1 class="text-5xl font-bold text-white mb-4 drop-shadow-lg">🏢 San Antonio Storage Finder</h1>
+            <p class="text-xl text-white/90 mb-6">Find the perfect storage solution with amazing discounts!</p>
+            <div class="flex justify-center space-x-8 text-white/80">
+                <div class="text-center">
+                    <div class="text-2xl font-bold">6+</div>
+                    <div class="text-sm">Locations</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold">100%</div>
+                    <div class="text-sm">Discounts</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold">4.6★</div>
+                    <div class="text-sm">Avg Rating</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="mb-8">
+            <div class="search-container rounded-2xl p-6 mb-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="text-2xl">🔍</div>
+                        <label for="locationSearch" class="text-gray-700 font-semibold">Search by Location:</label>
+                        <input 
+                            type="text" 
+                            id="locationSearch" 
+                            placeholder="Enter zipcode or area (e.g., 78215, Downtown, Alamo Heights)" 
+                            class="px-6 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 w-80 shadow-inner transition-all duration-300"
+                            oninput="searchByLocation(this.value)"
+                        >
+                        <button onclick="clearLocationSearch()" class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-3 rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 shadow-lg">
+                            ✕ Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap gap-4 justify-center">
+                <button onclick="filterByType('all')" class="filter-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-full hover:from-blue-700 hover:to-blue-800 shadow-lg font-semibold">
+                    🏢 All Storage
+                </button>
+                <button onclick="filterByType('climate')" class="filter-btn bg-white/90 text-gray-700 px-8 py-3 rounded-full hover:bg-white shadow-lg font-semibold border border-gray-200">
+                    ❄️ Climate Controlled
+                </button>
+                <button onclick="filterByType('drive-up')" class="filter-btn bg-white/90 text-gray-700 px-8 py-3 rounded-full hover:bg-white shadow-lg font-semibold border border-gray-200">
+                    🚗 Drive-Up Access
+                </button>
+                <button onclick="filterByType('security')" class="filter-btn bg-white/90 text-gray-700 px-8 py-3 rounded-full hover:bg-white shadow-lg font-semibold border border-gray-200">
+                    🔒 High Security
+                </button>
+            </div>
+        </div>
+
+        <div id="storageGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Storage options will be populated here -->
+        </div>
+    </div>
+
+    <script>
+        const storageOptions = [
+            // Downtown & Central San Antonio
+            {
+                name: "SecureSpace Self Storage",
+                location: "1234 Broadway St, San Antonio, TX 78215",
+                zipcode: "78215",
+                neighborhood: "Downtown",
+                area: "Central San Antonio",
+                phone: "(210) 555-0123",
+                website: "https://securespace.com",
+                discount: "First Month FREE",
+                features: ["climate", "security"],
+                rating: 4.8,
+                sizes: "5x5 to 10x30",
+                price: "Starting at $45/month"
+            },
+            {
+                name: "StorageMax Downtown",
+                location: "5678 Commerce St, San Antonio, TX 78205",
+                zipcode: "78205",
+                neighborhood: "Downtown",
+                area: "Central San Antonio",
+                phone: "(210) 555-0456",
+                website: "https://storagemax.com",
+                discount: "50% Off First 3 Months",
+                features: ["drive-up", "climate"],
+                rating: 4.6,
+                sizes: "5x5 to 12x40",
+                price: "Starting at $39/month"
+            },
+            {
+                name: "Alamo Storage Center",
+                location: "789 E Houston St, San Antonio, TX 78205",
+                zipcode: "78205",
+                neighborhood: "Downtown",
+                area: "Central San Antonio",
+                phone: "(210) 555-0234",
+                website: "https://alamostoragecenter.com",
+                discount: "First 2 Months Half Price",
+                features: ["security", "climate"],
+                rating: 4.3,
+                sizes: "5x5 to 10x20",
+                price: "Starting at $42/month"
+            },
+            {
+                name: "Central City Storage",
+                location: "1456 S Laredo St, San Antonio, TX 78207",
+                zipcode: "78207",
+                neighborhood: "Westside",
+                area: "Central San Antonio",
+                phone: "(210) 555-0345",
+                website: "https://centralcitystorage.com",
+                discount: "Military & Senior 20% Off",
+                features: ["drive-up"],
+                rating: 4.1,
+                sizes: "5x5 to 12x30",
+                price: "Starting at $38/month"
+            },
+
+            // North San Antonio
+            {
+                name: "Alamo City Storage",
+                location: "9012 San Pedro Ave, San Antonio, TX 78216",
+                zipcode: "78216",
+                neighborhood: "Alamo Heights",
+                area: "North San Antonio",
+                phone: "(210) 555-0789",
+                website: "https://alamocitystorage.com",
+                discount: "25% Off 6+ Months",
+                features: ["security", "drive-up"],
+                rating: 4.7,
+                sizes: "5x5 to 10x25",
+                price: "Starting at $52/month"
+            },
+            {
+                name: "North Star Storage",
+                location: "2468 Loop 1604 N, San Antonio, TX 78232",
+                zipcode: "78232",
+                neighborhood: "Stone Oak",
+                area: "North San Antonio",
+                phone: "(210) 555-0987",
+                website: "https://northstarstorage.com",
+                discount: "2 Months FREE with Annual",
+                features: ["climate", "security"],
+                rating: 4.5,
+                sizes: "5x5 to 10x20",
+                price: "Starting at $55/month"
+            },
+            {
+                name: "Stone Oak Self Storage",
+                location: "18503 Stone Oak Pkwy, San Antonio, TX 78258",
+                zipcode: "78258",
+                neighborhood: "Stone Oak",
+                area: "North San Antonio",
+                phone: "(210) 555-1234",
+                website: "https://stoneoakstorage.com",
+                discount: "First Month $1",
+                features: ["climate", "security", "drive-up"],
+                rating: 4.9,
+                sizes: "5x5 to 15x40",
+                price: "Starting at $58/month"
+            },
+            {
+                name: "Northside Storage Plus",
+                location: "7823 Blanco Rd, San Antonio, TX 78216",
+                zipcode: "78216",
+                neighborhood: "Alamo Heights",
+                area: "North San Antonio",
+                phone: "(210) 555-2345",
+                website: "https://northsidestorageplus.com",
+                discount: "Student Discount 15%",
+                features: ["climate", "drive-up"],
+                rating: 4.4,
+                sizes: "5x5 to 12x25",
+                price: "Starting at $49/month"
+            },
+            {
+                name: "Castle Hills Storage",
+                location: "2156 NW Military Hwy, San Antonio, TX 78213",
+                zipcode: "78213",
+                neighborhood: "Castle Hills",
+                area: "North San Antonio",
+                phone: "(210) 555-3456",
+                website: "https://castlehillsstorage.com",
+                discount: "No Deposit Required",
+                features: ["security", "drive-up"],
+                rating: 4.2,
+                sizes: "5x5 to 10x30",
+                price: "Starting at $46/month"
+            },
+
+            // Northwest San Antonio
+            {
+                name: "River City Self Storage",
+                location: "3456 Fredericksburg Rd, San Antonio, TX 78201",
+                zipcode: "78201",
+                neighborhood: "Monte Vista",
+                area: "Northwest San Antonio",
+                phone: "(210) 555-0321",
+                website: "https://rivercitystorage.com",
+                discount: "No Admin Fees",
+                features: ["climate", "security", "drive-up"],
+                rating: 4.9,
+                sizes: "5x5 to 15x30",
+                price: "Starting at $48/month"
+            },
+            {
+                name: "Medical Center Storage",
+                location: "7890 Babcock Rd, San Antonio, TX 78229",
+                zipcode: "78229",
+                neighborhood: "Medical Center",
+                area: "Northwest San Antonio",
+                phone: "(210) 555-4567",
+                website: "https://medicalcenterstorage.com",
+                discount: "Healthcare Workers 10% Off",
+                features: ["climate", "security"],
+                rating: 4.6,
+                sizes: "5x5 to 12x30",
+                price: "Starting at $51/month"
+            },
+            {
+                name: "Leon Valley Storage",
+                location: "6543 Bandera Rd, San Antonio, TX 78238",
+                zipcode: "78238",
+                neighborhood: "Leon Valley",
+                area: "Northwest San Antonio",
+                phone: "(210) 555-5678",
+                website: "https://leonvalleystorage.com",
+                discount: "3 Months for Price of 2",
+                features: ["drive-up", "security"],
+                rating: 4.3,
+                sizes: "5x5 to 15x35",
+                price: "Starting at $44/month"
+            },
+
+            // Northeast San Antonio
+            {
+                name: "Windcrest Storage Facility",
+                location: "8234 Midcrown Dr, San Antonio, TX 78218",
+                zipcode: "78218",
+                neighborhood: "Windcrest",
+                area: "Northeast San Antonio",
+                phone: "(210) 555-6789",
+                website: "https://windcreststorage.com",
+                discount: "Senior Citizens 15% Off",
+                features: ["climate", "drive-up"],
+                rating: 4.4,
+                sizes: "5x5 to 10x25",
+                price: "Starting at $43/month"
+            },
+            {
+                name: "Airport Storage Solutions",
+                location: "9876 Airport Blvd, San Antonio, TX 78216",
+                zipcode: "78216",
+                neighborhood: "Airport Area",
+                area: "Northeast San Antonio",
+                phone: "(210) 555-7890",
+                website: "https://airportstoragesolutions.com",
+                discount: "Move-in Special: $25 First Month",
+                features: ["security", "drive-up"],
+                rating: 4.1,
+                sizes: "5x5 to 12x40",
+                price: "Starting at $41/month"
+            },
+            {
+                name: "Northeast Mini Storage",
+                location: "4567 Thousand Oaks Dr, San Antonio, TX 78217",
+                zipcode: "78217",
+                neighborhood: "Thousand Oaks",
+                area: "Northeast San Antonio",
+                phone: "(210) 555-8901",
+                website: "https://northeastministorage.com",
+                discount: "Refer a Friend - Both Get $50",
+                features: ["climate", "security"],
+                rating: 4.5,
+                sizes: "5x5 to 10x20",
+                price: "Starting at $47/month"
+            },
+
+            // South San Antonio
+            {
+                name: "Southside Storage Solutions",
+                location: "7890 Military Dr, San Antonio, TX 78223",
+                zipcode: "78223",
+                neighborhood: "Southside",
+                area: "South San Antonio",
+                phone: "(210) 555-0654",
+                website: "https://southsidestorage.com",
+                discount: "Student & Military 15% Off",
+                features: ["drive-up"],
+                rating: 4.4,
+                sizes: "5x5 to 12x30",
+                price: "Starting at $35/month"
+            },
+            {
+                name: "Brooks City Base Storage",
+                location: "3210 SE Military Dr, San Antonio, TX 78223",
+                zipcode: "78223",
+                neighborhood: "Brooks City Base",
+                area: "South San Antonio",
+                phone: "(210) 555-9012",
+                website: "https://brookscitybasestorage.com",
+                discount: "Veterans Get 20% Off",
+                features: ["security", "drive-up"],
+                rating: 4.6,
+                sizes: "5x5 to 15x30",
+                price: "Starting at $37/month"
+            },
+            {
+                name: "Mission Trail Storage",
+                location: "5432 Mission Rd, San Antonio, TX 78214",
+                zipcode: "78214",
+                neighborhood: "Mission District",
+                area: "South San Antonio",
+                phone: "(210) 555-0123",
+                website: "https://missiontrailstorage.com",
+                discount: "First Month Half Off",
+                features: ["climate", "drive-up"],
+                rating: 4.2,
+                sizes: "5x5 to 12x25",
+                price: "Starting at $40/month"
+            },
+            {
+                name: "Southtown Self Storage",
+                location: "1987 S Flores St, San Antonio, TX 78204",
+                zipcode: "78204",
+                neighborhood: "Southtown",
+                area: "South San Antonio",
+                phone: "(210) 555-1357",
+                website: "https://southtownselfstorage.com",
+                discount: "Artist & Creative Discount 10%",
+                features: ["climate", "security"],
+                rating: 4.7,
+                sizes: "5x5 to 10x30",
+                price: "Starting at $44/month"
+            },
+
+            // Southeast San Antonio
+            {
+                name: "Southeast Storage Center",
+                location: "8765 Goliad Rd, San Antonio, TX 78223",
+                zipcode: "78223",
+                neighborhood: "Goliad",
+                area: "Southeast San Antonio",
+                phone: "(210) 555-2468",
+                website: "https://southeaststoragecenter.com",
+                discount: "Pay 6 Months, Get 7th Free",
+                features: ["drive-up", "security"],
+                rating: 4.3,
+                sizes: "5x5 to 12x35",
+                price: "Starting at $36/month"
+            },
+            {
+                name: "Palo Alto Storage",
+                location: "6789 WW White Rd, San Antonio, TX 78222",
+                zipcode: "78222",
+                neighborhood: "Palo Alto",
+                area: "Southeast San Antonio",
+                phone: "(210) 555-3579",
+                website: "https://paloaltostorage.com",
+                discount: "Online Rental 5% Off",
+                features: ["climate", "drive-up"],
+                rating: 4.1,
+                sizes: "5x5 to 10x25",
+                price: "Starting at $39/month"
+            },
+
+            // Southwest San Antonio
+            {
+                name: "Westside Storage Depot",
+                location: "4321 Culebra Rd, San Antonio, TX 78228",
+                zipcode: "78228",
+                neighborhood: "Westside",
+                area: "Southwest San Antonio",
+                phone: "(210) 555-4680",
+                website: "https://westsidestorgedepot.com",
+                discount: "Bilingual Service + 10% Off",
+                features: ["drive-up", "security"],
+                rating: 4.4,
+                sizes: "5x5 to 15x40",
+                price: "Starting at $33/month"
+            },
+            {
+                name: "Lackland Storage Solutions",
+                location: "9876 SW Military Dr, San Antonio, TX 78221",
+                zipcode: "78221",
+                neighborhood: "Lackland Area",
+                area: "Southwest San Antonio",
+                phone: "(210) 555-5791",
+                website: "https://lacklandstoragesolutions.com",
+                discount: "Military Families 25% Off",
+                features: ["security", "climate"],
+                rating: 4.8,
+                sizes: "5x5 to 12x30",
+                price: "Starting at $38/month"
+            },
+            {
+                name: "Pearsall Park Storage",
+                location: "2345 Pearsall Park Dr, San Antonio, TX 78224",
+                zipcode: "78224",
+                neighborhood: "Pearsall Park",
+                area: "Southwest San Antonio",
+                phone: "(210) 555-6802",
+                website: "https://pearsallparkstorage.com",
+                discount: "Family Plan: 2nd Unit 50% Off",
+                features: ["drive-up"],
+                rating: 4.0,
+                sizes: "5x5 to 12x25",
+                price: "Starting at $32/month"
+            },
+
+            // East San Antonio
+            {
+                name: "Eastside Mini Storage",
+                location: "5678 E Houston St, San Antonio, TX 78202",
+                zipcode: "78202",
+                neighborhood: "Eastside",
+                area: "East San Antonio",
+                phone: "(210) 555-7913",
+                website: "https://eastsideministorage.com",
+                discount: "Community Discount 12%",
+                features: ["drive-up", "security"],
+                rating: 4.2,
+                sizes: "5x5 to 10x30",
+                price: "Starting at $34/month"
+            },
+            {
+                name: "Dignowity Hill Storage",
+                location: "3456 Dignowity Ave, San Antonio, TX 78202",
+                zipcode: "78202",
+                neighborhood: "Dignowity Hill",
+                area: "East San Antonio",
+                phone: "(210) 555-8024",
+                website: "https://dignowityhill storage.com",
+                discount: "Historic District Special 15%",
+                features: ["climate", "security"],
+                rating: 4.5,
+                sizes: "5x5 to 10x20",
+                price: "Starting at $41/month"
+            },
+
+            // Far North San Antonio
+            {
+                name: "Bulverde Storage Park",
+                location: "12345 Bulverde Rd, San Antonio, TX 78247",
+                zipcode: "78247",
+                neighborhood: "Bulverde",
+                area: "Far North San Antonio",
+                phone: "(210) 555-9135",
+                website: "https://bulverdestoragepark.com",
+                discount: "RV & Boat Storage 20% Off",
+                features: ["drive-up", "security"],
+                rating: 4.6,
+                sizes: "5x5 to 20x50",
+                price: "Starting at $48/month"
+            },
+            {
+                name: "Schertz Storage Center",
+                location: "8901 FM 3009, Schertz, TX 78154",
+                zipcode: "78154",
+                neighborhood: "Schertz",
+                area: "Far North San Antonio",
+                phone: "(210) 555-0246",
+                website: "https://schertzstoragecenter.com",
+                discount: "New Customer: 2 Months Free",
+                features: ["climate", "security", "drive-up"],
+                rating: 4.7,
+                sizes: "5x5 to 15x35",
+                price: "Starting at $52/month"
+            },
+
+            // Far West San Antonio
+            {
+                name: "Helotes Storage Facility",
+                location: "15678 Bandera Rd, Helotes, TX 78023",
+                zipcode: "78023",
+                neighborhood: "Helotes",
+                area: "Far West San Antonio",
+                phone: "(210) 555-1357",
+                website: "https://helotesstoragefacility.com",
+                discount: "Country Living Discount 18%",
+                features: ["drive-up", "security"],
+                rating: 4.3,
+                sizes: "5x5 to 15x40",
+                price: "Starting at $45/month"
+            },
+            {
+                name: "Boerne Stage Storage",
+                location: "23456 IH-10 W, San Antonio, TX 78257",
+                zipcode: "78257",
+                neighborhood: "Far West Side",
+                area: "Far West San Antonio",
+                phone: "(210) 555-2468",
+                website: "https://boernestagestorage.com",
+                discount: "Highway Access Special 10%",
+                features: ["climate", "drive-up"],
+                rating: 4.4,
+                sizes: "5x5 to 12x30",
+                price: "Starting at $47/month"
+            }
+        ];
+
+        let currentFilter = 'all';
+        let currentLocation = '';
+
+        function searchByLocation(location) {
+            currentLocation = location.trim().toLowerCase();
+            renderStorageOptions(currentFilter, currentLocation);
+        }
+
+        function clearLocationSearch() {
+            document.getElementById('locationSearch').value = '';
+            currentLocation = '';
+            renderStorageOptions(currentFilter, '');
+        }
+
+        function createStorageCard(storage) {
+            const featureIcons = {
+                'climate': '❄️ Climate Controlled',
+                'drive-up': '🚗 Drive-Up Access',
+                'security': '🔒 High Security'
+            };
+
+            const featuresHTML = storage.features.map(feature => 
+                `<span class="feature-tag inline-block text-white text-xs px-3 py-1 rounded-full mr-2 mb-2 font-medium shadow-lg">
+                    ${featureIcons[feature]}
+                </span>`
+            ).join('');
+
+            const stars = '⭐'.repeat(Math.floor(storage.rating));
+
+            return `
+                <div class="storage-card card-gradient rounded-2xl shadow-2xl p-8 border border-white/20 relative overflow-hidden" data-features="${storage.features.join(',')}">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full"></div>
+                    
+                    <div class="flex justify-between items-start mb-6 relative z-10">
+                        <h3 class="text-2xl font-bold text-gray-800 leading-tight">${storage.name}</h3>
+                        <span class="discount-badge text-white text-sm px-4 py-2 rounded-full font-bold shadow-lg">
+                            🎉 ${storage.discount}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <div class="flex items-center mb-4">
+                            <span class="rating-stars text-yellow-400 text-lg">${stars}</span>
+                            <span class="text-gray-700 ml-3 font-semibold">${storage.rating}/5</span>
+                            <span class="text-gray-500 ml-2 text-sm">(${Math.floor(Math.random() * 200 + 50)} reviews)</span>
+                        </div>
+                        <div class="space-y-3">
+                            <p class="text-gray-700 flex items-center"><span class="text-xl mr-3">📍</span> ${storage.location}</p>
+                            <p class="text-gray-700 flex items-center"><span class="text-xl mr-3">📏</span> Sizes: ${storage.sizes}</p>
+                            <p class="text-green-600 font-bold text-lg flex items-center"><span class="text-xl mr-3">💰</span> ${storage.price}</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Features</h4>
+                        <div class="flex flex-wrap">
+                            ${featuresHTML}
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-6">
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <a href="tel:${storage.phone}" class="action-btn bg-gradient-to-r from-green-500 to-green-600 text-white text-center py-3 px-4 rounded-xl hover:from-green-600 hover:to-green-700 font-semibold shadow-lg">
+                                📞 Call Now
+                            </a>
+                            <a href="${storage.website}" target="_blank" rel="noopener noreferrer" class="action-btn bg-gradient-to-r from-blue-500 to-blue-600 text-white text-center py-3 px-4 rounded-xl hover:from-blue-600 hover:to-blue-700 font-semibold shadow-lg">
+                                🌐 Website
+                            </a>
+                        </div>
+                        <button onclick="showContactInfo('${storage.name}', '${storage.phone}', '${storage.location}')" class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-300 font-medium text-sm">
+                            📋 View Details
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStorageOptions(filter = 'all', location = '') {
+            const grid = document.getElementById('storageGrid');
+            let filteredStorage = storageOptions;
+
+            // Filter by location first if provided (zipcode, neighborhood, or area)
+            if (location) {
+                filteredStorage = filteredStorage.filter(storage => {
+                    const searchTerm = location.toLowerCase();
+                    return (
+                        storage.zipcode.includes(location) ||
+                        storage.neighborhood.toLowerCase().includes(searchTerm) ||
+                        storage.area.toLowerCase().includes(searchTerm) ||
+                        storage.location.toLowerCase().includes(searchTerm)
+                    );
+                });
+            }
+
+            // Then filter by type if not 'all'
+            if (filter !== 'all') {
+                filteredStorage = filteredStorage.filter(storage => 
+                    storage.features.includes(filter)
+                );
+            }
+
+            if (filteredStorage.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16">
+                        <div class="bg-white/90 rounded-3xl p-12 shadow-2xl backdrop-filter backdrop-blur-lg border border-white/20">
+                            <div class="text-8xl mb-6">🔍</div>
+                            <h3 class="text-3xl font-bold text-gray-700 mb-4">No storage facilities found</h3>
+                            <p class="text-gray-600 text-lg mb-6">Try adjusting your search criteria or location</p>
+                            <div class="flex justify-center space-x-4">
+                                <button onclick="clearLocationSearch(); filterByType('all')" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg font-semibold">
+                                    🔄 Reset Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                grid.innerHTML = filteredStorage.map(storage => createStorageCard(storage)).join('');
+            }
+        }
+
+        function filterByType(type) {
+            currentFilter = type;
+            
+            // Update button styles
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-gradient-to-r', 'from-blue-600', 'to-blue-700', 'text-white', 'hover:from-blue-700', 'hover:to-blue-800');
+                btn.classList.add('bg-white/90', 'text-gray-700', 'hover:bg-white', 'border', 'border-gray-200');
+            });
+            
+            event.target.classList.remove('bg-white/90', 'text-gray-700', 'hover:bg-white', 'border', 'border-gray-200');
+            event.target.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-blue-700', 'text-white', 'hover:from-blue-700', 'hover:to-blue-800');
+            
+            renderStorageOptions(type, currentLocation);
+        }
+
+        function showContactInfo(name, phone, location) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">📋 ${name}</h3>
+                    <div class="space-y-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600 mb-1">Phone Number</p>
+                            <p class="text-lg font-semibold text-blue-800">${phone}</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600 mb-1">Address</p>
+                            <p class="text-sm font-medium text-green-800">${location}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <a href="tel:${phone}" class="flex-1 bg-green-600 text-white text-center py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                            📞 Call Now
+                        </a>
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors font-semibold">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Initialize the page
+        renderStorageOptions();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992aa12b45a2460b',t:'MTc2MTE1MzI1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
