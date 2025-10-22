@@ -259,7 +259,7 @@
             <p class="text-xl text-white/90 mb-6">Find the perfect storage solution with amazing discounts!</p>
             <div class="flex justify-center space-x-8 text-white/80">
                 <div class="text-center tooltip" data-tooltip="Covering all major areas">
-                    <div class="text-2xl font-bold">30+</div>
+                    <div class="text-2xl font-bold">34+</div>
                     <div class="text-sm">Locations</div>
                 </div>
                 <div class="text-center tooltip" data-tooltip="Every facility offers special deals">
@@ -295,11 +295,19 @@
                 </div>
                 <div id="searchSuggestions" class="mt-4 hidden">
                     <p class="text-sm text-gray-600 mb-2">Popular searches:</p>
-                    <div class="flex flex-wrap gap-2">
+                    <div class="flex flex-wrap gap-2 mb-3">
                         <button onclick="quickSearch('Downtown')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors">Downtown</button>
                         <button onclick="quickSearch('Stone Oak')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors">Stone Oak</button>
                         <button onclick="quickSearch('Medical Center')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors">Medical Center</button>
                         <button onclick="quickSearch('Southtown')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors">Southtown</button>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-2">Try these zip codes:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="quickSearch('78215')" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition-colors">78215 (Downtown)</button>
+                        <button onclick="quickSearch('78258')" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition-colors">78258 (Stone Oak)</button>
+                        <button onclick="quickSearch('78229')" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition-colors">78229 (Medical Center)</button>
+                        <button onclick="quickSearch('78204')" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition-colors">78204 (Southtown)</button>
+                        <button onclick="quickSearch('78245')" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition-colors">78245 (Kelly USA)</button>
                     </div>
                 </div>
             </div>
@@ -323,7 +331,7 @@
         <!-- Results Counter -->
         <div id="resultsCounter" class="text-center mb-6 fade-in">
             <p class="text-white/80 text-lg font-medium">
-                <span id="resultCount">30</span> storage facilities found
+                <span id="resultCount">34</span> storage facilities found
             </p>
         </div>
 
@@ -777,6 +785,64 @@
                 rating: 4.4,
                 sizes: "5x5 to 12x30",
                 price: "Starting at $47/month"
+            },
+
+            // 78245 Area - Kelly USA/Port San Antonio
+            {
+                name: "Kelly USA Storage Center",
+                location: "3456 General Hudnell Dr, San Antonio, TX 78245",
+                zipcode: "78245",
+                neighborhood: "Kelly USA",
+                area: "Southwest San Antonio",
+                phone: "(210) 555-7890",
+                website: "https://www.kellyusastorage.com",
+                discount: "Port Workers 15% Off",
+                features: ["security", "drive-up"],
+                rating: 4.5,
+                sizes: "5x5 to 20x40",
+                price: "Starting at $36/month"
+            },
+            {
+                name: "Port San Antonio Storage",
+                location: "8901 Port San Antonio Rd, San Antonio, TX 78245",
+                zipcode: "78245",
+                neighborhood: "Port San Antonio",
+                area: "Southwest San Antonio",
+                phone: "(210) 555-8901",
+                website: "https://www.portsastorage.org",
+                discount: "Business Storage 20% Off",
+                features: ["climate", "security", "drive-up"],
+                rating: 4.6,
+                sizes: "5x5 to 15x50",
+                price: "Starting at $38/month"
+            },
+            {
+                name: "Southwest Storage Solutions",
+                location: "5432 SW Loop 410, San Antonio, TX 78245",
+                zipcode: "78245",
+                neighborhood: "Southwest Loop",
+                area: "Southwest San Antonio",
+                phone: "(210) 555-9012",
+                website: "https://www.swstoragesolutions.net",
+                discount: "First 3 Months Half Price",
+                features: ["drive-up", "security"],
+                rating: 4.2,
+                sizes: "5x5 to 12x35",
+                price: "Starting at $34/month"
+            },
+            {
+                name: "Lackland Annex Storage",
+                location: "7890 Military Dr W, San Antonio, TX 78245",
+                zipcode: "78245",
+                neighborhood: "Lackland Annex",
+                area: "Southwest San Antonio",
+                phone: "(210) 555-0123",
+                website: "https://www.lacklandannexstorage.com",
+                discount: "Military & Veteran 25% Off",
+                features: ["security", "climate"],
+                rating: 4.7,
+                sizes: "5x5 to 10x30",
+                price: "Starting at $37/month"
             }
         ];
 
@@ -806,10 +872,60 @@
             }, 3000);
         }
 
+        // Zip code proximity mapping for San Antonio area
+        const zipCodeProximity = {
+            // Downtown/Central
+            '78201': ['78201', '78202', '78203', '78204', '78205', '78207', '78212'],
+            '78202': ['78202', '78201', '78203', '78204', '78205'],
+            '78203': ['78203', '78201', '78202', '78204', '78205'],
+            '78204': ['78204', '78201', '78202', '78203', '78205', '78207'],
+            '78205': ['78205', '78201', '78202', '78203', '78204', '78207', '78215'],
+            '78207': ['78207', '78201', '78204', '78205', '78228'],
+            '78212': ['78212', '78201', '78215', '78216'],
+            '78215': ['78215', '78205', '78212', '78216'],
+            
+            // North San Antonio
+            '78213': ['78213', '78216', '78232', '78258'],
+            '78216': ['78216', '78212', '78213', '78215', '78232'],
+            '78232': ['78232', '78213', '78216', '78258', '78247'],
+            '78258': ['78258', '78232', '78213', '78247'],
+            
+            // Northwest
+            '78229': ['78229', '78238', '78201'],
+            '78238': ['78238', '78229', '78228'],
+            
+            // Northeast
+            '78217': ['78217', '78218', '78216'],
+            '78218': ['78218', '78217', '78216'],
+            
+            // South San Antonio
+            '78214': ['78214', '78204', '78223', '78224'],
+            '78221': ['78221', '78223', '78224', '78228'],
+            '78223': ['78223', '78214', '78221', '78224'],
+            '78224': ['78224', '78214', '78221', '78223'],
+            
+            // Southeast
+            '78222': ['78222', '78223'],
+            
+            // Southwest
+            '78228': ['78228', '78207', '78221', '78238', '78245'],
+            '78245': ['78245', '78221', '78228', '78224'],
+            
+            // Far areas
+            '78154': ['78154', '78247', '78258'], // Schertz
+            '78247': ['78247', '78154', '78232', '78258'], // Bulverde
+            '78023': ['78023', '78257'], // Helotes
+            '78257': ['78257', '78023'] // Far West
+        };
+
+        function findNearbyZipCodes(zipCode) {
+            return zipCodeProximity[zipCode] || [zipCode];
+        }
+
         function searchByLocation(location) {
             if (isLoading) return;
             
-            currentLocation = location.trim().toLowerCase();
+            currentLocation = location.trim();
             
             if (location.length > 0) {
                 document.getElementById('searchSuggestions').classList.remove('hidden');
@@ -826,7 +942,8 @@
                 isLoading = false;
                 
                 if (location.length > 0) {
-                    showNotification(`Found storage options for "${location}"`);
+                    const resultCount = document.getElementById('resultCount').textContent;
+                    showNotification(`Found ${resultCount} storage facilities for "${location}"`);
                 }
             }, 300);
         }
@@ -913,15 +1030,29 @@
 
             // Filter by location first if provided (zipcode, neighborhood, or area)
             if (location) {
-                filteredStorage = filteredStorage.filter(storage => {
-                    const searchTerm = location.toLowerCase();
-                    return (
-                        storage.zipcode.includes(location) ||
-                        storage.neighborhood.toLowerCase().includes(searchTerm) ||
-                        storage.area.toLowerCase().includes(searchTerm) ||
-                        storage.location.toLowerCase().includes(searchTerm)
-                    );
-                });
+                const searchTerm = location.toLowerCase();
+                
+                // Check if the search term is a zip code (5 digits)
+                const isZipCode = /^\d{5}$/.test(location.trim());
+                
+                if (isZipCode) {
+                    // Find nearby zip codes for proximity search
+                    const nearbyZipCodes = findNearbyZipCodes(location.trim());
+                    
+                    filteredStorage = filteredStorage.filter(storage => {
+                        return nearbyZipCodes.includes(storage.zipcode);
+                    });
+                } else {
+                    // Search by neighborhood, area, or partial address
+                    filteredStorage = filteredStorage.filter(storage => {
+                        return (
+                            storage.zipcode.includes(location.trim()) ||
+                            storage.neighborhood.toLowerCase().includes(searchTerm) ||
+                            storage.area.toLowerCase().includes(searchTerm) ||
+                            storage.location.toLowerCase().includes(searchTerm)
+                        );
+                    });
+                }
             }
 
             // Then filter by type if not 'all'
@@ -1070,8 +1201,8 @@
         
         // Show welcome notification
         setTimeout(() => {
-            showNotification('Welcome! 30 storage facilities loaded and ready to search.');
+            showNotification('Welcome! 34 storage facilities loaded and ready to search.');
         }, 1000);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992ab87f42a42fdc',t:'MTc2MTE1NDIwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992ac3cda6f32fdc',t:'MTc2MTE1NDY2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
