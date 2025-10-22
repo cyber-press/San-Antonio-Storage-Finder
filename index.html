@@ -12,10 +12,19 @@
         .storage-card {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease-out forwards;
         }
         .storage-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .discount-badge {
             animation: pulse 2s infinite;
@@ -26,32 +35,90 @@
             50% { opacity: 0.9; transform: scale(1.05); }
         }
         .search-container {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .search-container:hover {
+            background: rgba(255, 255, 255, 0.98);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         .filter-btn {
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
         .filter-btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+        }
+        .filter-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        .filter-btn:hover::after {
+            left: 100%;
         }
         .hero-gradient {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         .card-gradient {
             background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
         .feature-tag {
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         .feature-tag:hover {
-            transform: scale(1.05);
+            transform: scale(1.1) rotate(2deg);
+        }
+        .feature-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.3s;
+        }
+        .feature-tag:hover::before {
+            left: 100%;
         }
         .rating-stars {
             filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+            transition: all 0.3s ease;
+        }
+        .rating-stars:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 2px 4px rgba(255, 193, 7, 0.3));
         }
         .action-btn {
             transition: all 0.3s ease;
@@ -59,8 +126,8 @@
             overflow: hidden;
         }
         .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
         .action-btn::before {
             content: '';
@@ -69,36 +136,144 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s;
         }
         .action-btn:hover::before {
             left: 100%;
         }
+        .action-btn:active {
+            transform: translateY(-1px);
+        }
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .bounce-in {
+            animation: bounceIn 0.8s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .search-focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        .tooltip {
+            position: relative;
+        }
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+        .progress-bar {
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ef4444);
+            background-size: 200% 100%;
+            animation: progress 2s linear infinite;
+        }
+        @keyframes progress {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .stagger-animation {
+            animation-delay: calc(var(--index) * 0.1s);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-full">
+    <!-- Progress Bar -->
+    <div id="progressBar" class="progress-bar fixed top-0 left-0 w-full z-50 opacity-0 transition-opacity duration-300"></div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <div class="flex items-center">
+            <span class="mr-2">✅</span>
+            <span id="notificationText">Search completed!</span>
+        </div>
+    </div>
+
     <div class="container mx-auto px-4 py-8">
-        <header class="text-center mb-12 hero-gradient rounded-3xl p-8 shadow-2xl">
+        <header class="text-center mb-12 hero-gradient rounded-3xl p-8 shadow-2xl bounce-in">
             <h1 class="text-5xl font-bold text-white mb-4 drop-shadow-lg">🏢 San Antonio Storage Finder</h1>
             <p class="text-xl text-white/90 mb-6">Find the perfect storage solution with amazing discounts!</p>
             <div class="flex justify-center space-x-8 text-white/80">
-                <div class="text-center">
-                    <div class="text-2xl font-bold">6+</div>
+                <div class="text-center tooltip" data-tooltip="Covering all major areas">
+                    <div class="text-2xl font-bold">30+</div>
                     <div class="text-sm">Locations</div>
                 </div>
-                <div class="text-center">
+                <div class="text-center tooltip" data-tooltip="Every facility offers special deals">
                     <div class="text-2xl font-bold">100%</div>
                     <div class="text-sm">Discounts</div>
                 </div>
-                <div class="text-center">
+                <div class="text-center tooltip" data-tooltip="Highly rated facilities">
                     <div class="text-2xl font-bold">4.6★</div>
                     <div class="text-sm">Avg Rating</div>
                 </div>
             </div>
         </header>
 
-        <div class="mb-8">
+        <div class="mb-8 slide-up">
             <div class="search-container rounded-2xl p-6 mb-6 shadow-xl">
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <div class="flex items-center gap-3">
@@ -108,36 +283,59 @@
                             type="text" 
                             id="locationSearch" 
                             placeholder="Enter zipcode or area (e.g., 78215, Downtown, Alamo Heights)" 
-                            class="px-6 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 w-80 shadow-inner transition-all duration-300"
+                            class="px-6 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 w-80 shadow-inner transition-all duration-300 focus:scale-105"
                             oninput="searchByLocation(this.value)"
+                            onfocus="this.classList.add('search-focus')"
+                            onblur="this.classList.remove('search-focus')"
                         >
-                        <button onclick="clearLocationSearch()" class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-3 rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 shadow-lg">
+                        <button onclick="clearLocationSearch()" class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-3 rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 shadow-lg tooltip" data-tooltip="Clear search">
                             ✕ Clear
                         </button>
+                    </div>
+                </div>
+                <div id="searchSuggestions" class="mt-4 hidden">
+                    <p class="text-sm text-gray-600 mb-2">Popular searches:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="quickSearch('Downtown')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors">Downtown</button>
+                        <button onclick="quickSearch('Stone Oak')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors">Stone Oak</button>
+                        <button onclick="quickSearch('Medical Center')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors">Medical Center</button>
+                        <button onclick="quickSearch('Southtown')" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm hover:bg-blue-200 transition-colors">Southtown</button>
                     </div>
                 </div>
             </div>
             
             <div class="flex flex-wrap gap-4 justify-center">
-                <button onclick="filterByType('all')" class="filter-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-full hover:from-blue-700 hover:to-blue-800 shadow-lg font-semibold">
+                <button onclick="filterByType('all')" class="filter-btn bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-full hover:from-blue-700 hover:to-blue-800 shadow-lg font-semibold tooltip" data-tooltip="Show all storage options">
                     🏢 All Storage
                 </button>
-                <button onclick="filterByType('climate')" class="filter-btn bg-white/90 text-gray-700 px-8 py-3 rounded-full hover:bg-white shadow-lg font-semibold border border-gray-200">
+                <button onclick="filterByType('climate')" class="filter-btn bg-white/90 text-gray-700 px-8 py-3 rounded-full hover:bg-white shadow-lg font-semibold border border-gray-200 tooltip" data-tooltip="Temperature controlled units">
                     ❄️ Climate Controlled
                 </button>
-                <button onclick="filterByType('drive-up')" class="filter-btn bg-white/90 text-gray-700 px-8 py-3 rounded-full hover:bg-white shadow-lg font-semibold border border-gray-200">
+                <button onclick="filterByType('drive-up')" class="filter-btn bg-white/90 text-gray-700 px-8 py-3 rounded-full hover:bg-white shadow-lg font-semibold border border-gray-200 tooltip" data-tooltip="Easy vehicle access">
                     🚗 Drive-Up Access
                 </button>
-                <button onclick="filterByType('security')" class="filter-btn bg-white/90 text-gray-700 px-8 py-3 rounded-full hover:bg-white shadow-lg font-semibold border border-gray-200">
+                <button onclick="filterByType('security')" class="filter-btn bg-white/90 text-gray-700 px-8 py-3 rounded-full hover:bg-white shadow-lg font-semibold border border-gray-200 tooltip" data-tooltip="Enhanced security features">
                     🔒 High Security
                 </button>
             </div>
+        </div>
+
+        <!-- Results Counter -->
+        <div id="resultsCounter" class="text-center mb-6 fade-in">
+            <p class="text-white/80 text-lg font-medium">
+                <span id="resultCount">30</span> storage facilities found
+            </p>
         </div>
 
         <div id="storageGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Storage options will be populated here -->
         </div>
     </div>
+
+    <!-- Floating Help Button -->
+    <button onclick="showHelp()" class="floating-action bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-full shadow-2xl hover:from-purple-600 hover:to-purple-700 transition-all duration-300 tooltip" data-tooltip="Need help? Click here!">
+        ❓
+    </button>
 
     <script>
         const storageOptions = [
@@ -149,7 +347,7 @@
                 neighborhood: "Downtown",
                 area: "Central San Antonio",
                 phone: "(210) 555-0123",
-                website: "https://securespace.com",
+                website: "https://www.publicstorage.com",
                 discount: "First Month FREE",
                 features: ["climate", "security"],
                 rating: 4.8,
@@ -163,7 +361,7 @@
                 neighborhood: "Downtown",
                 area: "Central San Antonio",
                 phone: "(210) 555-0456",
-                website: "https://storagemax.com",
+                website: "https://www.extraspace.com",
                 discount: "50% Off First 3 Months",
                 features: ["drive-up", "climate"],
                 rating: 4.6,
@@ -177,7 +375,7 @@
                 neighborhood: "Downtown",
                 area: "Central San Antonio",
                 phone: "(210) 555-0234",
-                website: "https://alamostoragecenter.com",
+                website: "https://www.uhaul.com/Storage",
                 discount: "First 2 Months Half Price",
                 features: ["security", "climate"],
                 rating: 4.3,
@@ -191,7 +389,7 @@
                 neighborhood: "Westside",
                 area: "Central San Antonio",
                 phone: "(210) 555-0345",
-                website: "https://centralcitystorage.com",
+                website: "https://www.cubesmart.com",
                 discount: "Military & Senior 20% Off",
                 features: ["drive-up"],
                 rating: 4.1,
@@ -207,7 +405,7 @@
                 neighborhood: "Alamo Heights",
                 area: "North San Antonio",
                 phone: "(210) 555-0789",
-                website: "https://alamocitystorage.com",
+                website: "https://www.selfstorage.com",
                 discount: "25% Off 6+ Months",
                 features: ["security", "drive-up"],
                 rating: 4.7,
@@ -221,7 +419,7 @@
                 neighborhood: "Stone Oak",
                 area: "North San Antonio",
                 phone: "(210) 555-0987",
-                website: "https://northstarstorage.com",
+                website: "https://www.lifestorage.com",
                 discount: "2 Months FREE with Annual",
                 features: ["climate", "security"],
                 rating: 4.5,
@@ -235,7 +433,7 @@
                 neighborhood: "Stone Oak",
                 area: "North San Antonio",
                 phone: "(210) 555-1234",
-                website: "https://stoneoakstorage.com",
+                website: "https://www.storageunit.com",
                 discount: "First Month $1",
                 features: ["climate", "security", "drive-up"],
                 rating: 4.9,
@@ -249,7 +447,7 @@
                 neighborhood: "Alamo Heights",
                 area: "North San Antonio",
                 phone: "(210) 555-2345",
-                website: "https://northsidestorageplus.com",
+                website: "https://www.simplystorage.com",
                 discount: "Student Discount 15%",
                 features: ["climate", "drive-up"],
                 rating: 4.4,
@@ -263,7 +461,7 @@
                 neighborhood: "Castle Hills",
                 area: "North San Antonio",
                 phone: "(210) 555-3456",
-                website: "https://castlehillsstorage.com",
+                website: "https://www.storagemart.com",
                 discount: "No Deposit Required",
                 features: ["security", "drive-up"],
                 rating: 4.2,
@@ -279,7 +477,7 @@
                 neighborhood: "Monte Vista",
                 area: "Northwest San Antonio",
                 phone: "(210) 555-0321",
-                website: "https://rivercitystorage.com",
+                website: "https://www.redselfstorage.com",
                 discount: "No Admin Fees",
                 features: ["climate", "security", "drive-up"],
                 rating: 4.9,
@@ -293,7 +491,7 @@
                 neighborhood: "Medical Center",
                 area: "Northwest San Antonio",
                 phone: "(210) 555-4567",
-                website: "https://medicalcenterstorage.com",
+                website: "https://www.americanselfstorage.com",
                 discount: "Healthcare Workers 10% Off",
                 features: ["climate", "security"],
                 rating: 4.6,
@@ -307,7 +505,7 @@
                 neighborhood: "Leon Valley",
                 area: "Northwest San Antonio",
                 phone: "(210) 555-5678",
-                website: "https://leonvalleystorage.com",
+                website: "https://www.storagepro.com",
                 discount: "3 Months for Price of 2",
                 features: ["drive-up", "security"],
                 rating: 4.3,
@@ -323,7 +521,7 @@
                 neighborhood: "Windcrest",
                 area: "Northeast San Antonio",
                 phone: "(210) 555-6789",
-                website: "https://windcreststorage.com",
+                website: "https://www.storagefacilities.com",
                 discount: "Senior Citizens 15% Off",
                 features: ["climate", "drive-up"],
                 rating: 4.4,
@@ -337,7 +535,7 @@
                 neighborhood: "Airport Area",
                 area: "Northeast San Antonio",
                 phone: "(210) 555-7890",
-                website: "https://airportstoragesolutions.com",
+                website: "https://www.storageking.com",
                 discount: "Move-in Special: $25 First Month",
                 features: ["security", "drive-up"],
                 rating: 4.1,
@@ -351,7 +549,7 @@
                 neighborhood: "Thousand Oaks",
                 area: "Northeast San Antonio",
                 phone: "(210) 555-8901",
-                website: "https://northeastministorage.com",
+                website: "https://www.ministorage.com",
                 discount: "Refer a Friend - Both Get $50",
                 features: ["climate", "security"],
                 rating: 4.5,
@@ -367,7 +565,7 @@
                 neighborhood: "Southside",
                 area: "South San Antonio",
                 phone: "(210) 555-0654",
-                website: "https://southsidestorage.com",
+                website: "https://www.southsidestorage.net",
                 discount: "Student & Military 15% Off",
                 features: ["drive-up"],
                 rating: 4.4,
@@ -381,7 +579,7 @@
                 neighborhood: "Brooks City Base",
                 area: "South San Antonio",
                 phone: "(210) 555-9012",
-                website: "https://brookscitybasestorage.com",
+                website: "https://www.brooksstorage.org",
                 discount: "Veterans Get 20% Off",
                 features: ["security", "drive-up"],
                 rating: 4.6,
@@ -395,7 +593,7 @@
                 neighborhood: "Mission District",
                 area: "South San Antonio",
                 phone: "(210) 555-0123",
-                website: "https://missiontrailstorage.com",
+                website: "https://www.missiontrailstorage.net",
                 discount: "First Month Half Off",
                 features: ["climate", "drive-up"],
                 rating: 4.2,
@@ -409,7 +607,7 @@
                 neighborhood: "Southtown",
                 area: "South San Antonio",
                 phone: "(210) 555-1357",
-                website: "https://southtownselfstorage.com",
+                website: "https://www.southtownstorage.org",
                 discount: "Artist & Creative Discount 10%",
                 features: ["climate", "security"],
                 rating: 4.7,
@@ -425,7 +623,7 @@
                 neighborhood: "Goliad",
                 area: "Southeast San Antonio",
                 phone: "(210) 555-2468",
-                website: "https://southeaststoragecenter.com",
+                website: "https://www.sestoragecenter.com",
                 discount: "Pay 6 Months, Get 7th Free",
                 features: ["drive-up", "security"],
                 rating: 4.3,
@@ -439,7 +637,7 @@
                 neighborhood: "Palo Alto",
                 area: "Southeast San Antonio",
                 phone: "(210) 555-3579",
-                website: "https://paloaltostorage.com",
+                website: "https://www.paloaltostorage.net",
                 discount: "Online Rental 5% Off",
                 features: ["climate", "drive-up"],
                 rating: 4.1,
@@ -455,7 +653,7 @@
                 neighborhood: "Westside",
                 area: "Southwest San Antonio",
                 phone: "(210) 555-4680",
-                website: "https://westsidestorgedepot.com",
+                website: "https://www.westsidestorage.org",
                 discount: "Bilingual Service + 10% Off",
                 features: ["drive-up", "security"],
                 rating: 4.4,
@@ -469,7 +667,7 @@
                 neighborhood: "Lackland Area",
                 area: "Southwest San Antonio",
                 phone: "(210) 555-5791",
-                website: "https://lacklandstoragesolutions.com",
+                website: "https://www.lacklandstorage.net",
                 discount: "Military Families 25% Off",
                 features: ["security", "climate"],
                 rating: 4.8,
@@ -483,7 +681,7 @@
                 neighborhood: "Pearsall Park",
                 area: "Southwest San Antonio",
                 phone: "(210) 555-6802",
-                website: "https://pearsallparkstorage.com",
+                website: "https://www.pearsallparkstorage.com",
                 discount: "Family Plan: 2nd Unit 50% Off",
                 features: ["drive-up"],
                 rating: 4.0,
@@ -499,7 +697,7 @@
                 neighborhood: "Eastside",
                 area: "East San Antonio",
                 phone: "(210) 555-7913",
-                website: "https://eastsideministorage.com",
+                website: "https://www.eastsidestorage.net",
                 discount: "Community Discount 12%",
                 features: ["drive-up", "security"],
                 rating: 4.2,
@@ -513,7 +711,7 @@
                 neighborhood: "Dignowity Hill",
                 area: "East San Antonio",
                 phone: "(210) 555-8024",
-                website: "https://dignowityhill storage.com",
+                website: "https://www.dignowityhill.org",
                 discount: "Historic District Special 15%",
                 features: ["climate", "security"],
                 rating: 4.5,
@@ -529,7 +727,7 @@
                 neighborhood: "Bulverde",
                 area: "Far North San Antonio",
                 phone: "(210) 555-9135",
-                website: "https://bulverdestoragepark.com",
+                website: "https://www.bulverdestorage.com",
                 discount: "RV & Boat Storage 20% Off",
                 features: ["drive-up", "security"],
                 rating: 4.6,
@@ -543,7 +741,7 @@
                 neighborhood: "Schertz",
                 area: "Far North San Antonio",
                 phone: "(210) 555-0246",
-                website: "https://schertzstoragecenter.com",
+                website: "https://www.schertzstorage.org",
                 discount: "New Customer: 2 Months Free",
                 features: ["climate", "security", "drive-up"],
                 rating: 4.7,
@@ -559,7 +757,7 @@
                 neighborhood: "Helotes",
                 area: "Far West San Antonio",
                 phone: "(210) 555-1357",
-                website: "https://helotesstoragefacility.com",
+                website: "https://www.helotesstorage.net",
                 discount: "Country Living Discount 18%",
                 features: ["drive-up", "security"],
                 rating: 4.3,
@@ -573,7 +771,7 @@
                 neighborhood: "Far West Side",
                 area: "Far West San Antonio",
                 phone: "(210) 555-2468",
-                website: "https://boernestagestorage.com",
+                website: "https://www.boernestage.org",
                 discount: "Highway Access Special 10%",
                 features: ["climate", "drive-up"],
                 rating: 4.4,
@@ -584,19 +782,69 @@
 
         let currentFilter = 'all';
         let currentLocation = '';
+        let isLoading = false;
+
+        function showProgressBar() {
+            document.getElementById('progressBar').style.opacity = '1';
+        }
+
+        function hideProgressBar() {
+            setTimeout(() => {
+                document.getElementById('progressBar').style.opacity = '0';
+            }, 500);
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white px-6 py-3 rounded-lg shadow-lg show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
 
         function searchByLocation(location) {
+            if (isLoading) return;
+            
             currentLocation = location.trim().toLowerCase();
-            renderStorageOptions(currentFilter, currentLocation);
+            
+            if (location.length > 0) {
+                document.getElementById('searchSuggestions').classList.remove('hidden');
+            } else {
+                document.getElementById('searchSuggestions').classList.add('hidden');
+            }
+            
+            showProgressBar();
+            isLoading = true;
+            
+            setTimeout(() => {
+                renderStorageOptions(currentFilter, currentLocation);
+                hideProgressBar();
+                isLoading = false;
+                
+                if (location.length > 0) {
+                    showNotification(`Found storage options for "${location}"`);
+                }
+            }, 300);
+        }
+
+        function quickSearch(term) {
+            document.getElementById('locationSearch').value = term;
+            searchByLocation(term);
         }
 
         function clearLocationSearch() {
             document.getElementById('locationSearch').value = '';
+            document.getElementById('searchSuggestions').classList.add('hidden');
             currentLocation = '';
             renderStorageOptions(currentFilter, '');
+            showNotification('Search cleared');
         }
 
-        function createStorageCard(storage) {
+        function createStorageCard(storage, index) {
             const featureIcons = {
                 'climate': '❄️ Climate Controlled',
                 'drive-up': '🚗 Drive-Up Access',
@@ -612,7 +860,7 @@
             const stars = '⭐'.repeat(Math.floor(storage.rating));
 
             return `
-                <div class="storage-card card-gradient rounded-2xl shadow-2xl p-8 border border-white/20 relative overflow-hidden" data-features="${storage.features.join(',')}">
+                <div class="storage-card card-gradient rounded-2xl shadow-2xl p-8 border border-white/20 relative overflow-hidden stagger-animation" data-features="${storage.features.join(',')}" style="--index: ${index}">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full"></div>
                     
                     <div class="flex justify-between items-start mb-6 relative z-10">
@@ -624,7 +872,7 @@
                     
                     <div class="mb-6">
                         <div class="flex items-center mb-4">
-                            <span class="rating-stars text-yellow-400 text-lg">${stars}</span>
+                            <span class="rating-stars text-yellow-400 text-lg cursor-pointer">${stars}</span>
                             <span class="text-gray-700 ml-3 font-semibold">${storage.rating}/5</span>
                             <span class="text-gray-500 ml-2 text-sm">(${Math.floor(Math.random() * 200 + 50)} reviews)</span>
                         </div>
@@ -683,9 +931,12 @@
                 );
             }
 
+            // Update results counter
+            document.getElementById('resultCount').textContent = filteredStorage.length;
+
             if (filteredStorage.length === 0) {
                 grid.innerHTML = `
-                    <div class="col-span-full text-center py-16">
+                    <div class="col-span-full text-center py-16 bounce-in">
                         <div class="bg-white/90 rounded-3xl p-12 shadow-2xl backdrop-filter backdrop-blur-lg border border-white/20">
                             <div class="text-8xl mb-6">🔍</div>
                             <h3 class="text-3xl font-bold text-gray-700 mb-4">No storage facilities found</h3>
@@ -699,12 +950,16 @@
                     </div>
                 `;
             } else {
-                grid.innerHTML = filteredStorage.map(storage => createStorageCard(storage)).join('');
+                grid.innerHTML = filteredStorage.map((storage, index) => createStorageCard(storage, index)).join('');
             }
         }
 
         function filterByType(type) {
+            if (isLoading) return;
+            
             currentFilter = type;
+            showProgressBar();
+            isLoading = true;
             
             // Update button styles
             document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -715,14 +970,26 @@
             event.target.classList.remove('bg-white/90', 'text-gray-700', 'hover:bg-white', 'border', 'border-gray-200');
             event.target.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-blue-700', 'text-white', 'hover:from-blue-700', 'hover:to-blue-800');
             
-            renderStorageOptions(type, currentLocation);
+            setTimeout(() => {
+                renderStorageOptions(type, currentLocation);
+                hideProgressBar();
+                isLoading = false;
+                
+                const filterNames = {
+                    'all': 'all storage options',
+                    'climate': 'climate controlled units',
+                    'drive-up': 'drive-up access units',
+                    'security': 'high security units'
+                };
+                showNotification(`Filtered to show ${filterNames[type]}`);
+            }, 300);
         }
 
         function showContactInfo(name, phone, location) {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 fade-in';
             modal.innerHTML = `
-                <div class="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+                <div class="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl bounce-in">
                     <h3 class="text-2xl font-bold text-gray-800 mb-4">📋 ${name}</h3>
                     <div class="space-y-4 mb-6">
                         <div class="bg-blue-50 p-4 rounded-lg">
@@ -754,8 +1021,57 @@
             });
         }
 
+        function showHelp() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 fade-in';
+            modal.innerHTML = `
+                <div class="bg-white rounded-2xl p-8 max-w-lg mx-4 shadow-2xl bounce-in">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">🆘 How to Use Storage Finder</h3>
+                    <div class="space-y-4 mb-6 text-gray-700">
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">🔍</span>
+                            <div>
+                                <p class="font-semibold">Search by Location</p>
+                                <p class="text-sm">Enter a zipcode, neighborhood, or area name to find nearby storage facilities.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">🏷️</span>
+                            <div>
+                                <p class="font-semibold">Filter by Features</p>
+                                <p class="text-sm">Use the filter buttons to find facilities with specific features like climate control or drive-up access.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-2xl mr-3">📞</span>
+                            <div>
+                                <p class="font-semibold">Contact Facilities</p>
+                                <p class="text-sm">Click "Call Now" to dial directly, or "Website" to visit their site for more information.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="this.closest('.fixed').remove()" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                        Got it! 👍
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
         // Initialize the page
         renderStorageOptions();
+        
+        // Show welcome notification
+        setTimeout(() => {
+            showNotification('Welcome! 30 storage facilities loaded and ready to search.');
+        }, 1000);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992aa12b45a2460b',t:'MTc2MTE1MzI1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992ab87f42a42fdc',t:'MTc2MTE1NDIwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
